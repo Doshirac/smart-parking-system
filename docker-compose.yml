@@ -1,0 +1,106 @@
+version: '3.9'
+
+services:
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: auth-service
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:Lfifrjh,en05@auth-db:5432/users
+      - ENCRYPTION_KEY=Rpk1a3P6m0MVV5S0BOLhk1TCFmiZO5tmBg1Oyzna6J0=
+    depends_on:
+      - auth-db
+
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Lfifrjh,en05
+      POSTGRES_DB: users
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+
+  # Spot Service
+  spot-service:
+    build:
+      context: ./spot-service
+    container_name: spot-service
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:Lfifrjh,en05@spot-db:5432/spots
+    depends_on:
+      - spot-db
+
+  spot-db:
+    image: postgres:15
+    container_name: spot-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Lfifrjh,en05
+      POSTGRES_DB: spots
+    ports:
+      - "5434:5432"
+    volumes:
+      - spot_data:/var/lib/postgresql/data
+
+  # Reservation Service
+  reservation-service:
+    build:
+      context: ./reservation-service
+    container_name: reservation-service
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:Lfifrjh,en05@reservation-db:5432/reservations
+    depends_on:
+      - reservation-db
+
+  reservation-db:
+    image: postgres:15
+    container_name: reservation-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Lfifrjh,en05
+      POSTGRES_DB: reservations
+    ports:
+      - "5435:5432"
+    volumes:
+      - reservation_data:/var/lib/postgresql/data
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ./payment-service
+    container_name: payment-service
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:Lfifrjh,en05@payment-db:5432/payments
+    depends_on:
+      - payment-db
+
+  payment-db:
+    image: postgres:15
+    container_name: payment-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Lfifrjh,en05
+      POSTGRES_DB: payments
+    ports:
+      - "5436:5432"
+    volumes:
+      - payment_data:/var/lib/postgresql/data
+
+volumes:
+  auth_data:
+  spot_data:
+  reservation_data:
+  payment_data:

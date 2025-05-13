@@ -1,0 +1,5 @@
+.venv
+spot-service/.env
+reservation-service/.env
+payment-service/.env
+auth-service/.env
